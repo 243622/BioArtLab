@@ -1,0 +1,10 @@
+SQLAlchemy~=2.0.36
+PyJWT~=2.9.0
+requests~=2.32.3
+pydantic~=2.9.2
+starlette~=0.41.2
+fastapi~=0.115.5
+passlib~=1.7.4
+python-jose[cryptography]~=3.3.0
+uvicorn~=0.32.0
+schedule~=1.2.2
