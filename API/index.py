@@ -72,6 +72,24 @@ def check_food_quantity():
     finally:
         db.close()
 
+def check_unfinished_daily_tasks():
+    db: Session = SessionLocal()
+    try:
+        unfinished_tasks = db.query(models.Task).filter(
+            models.Task.daily == 1,
+            models.Task.finished == 0
+        ).all()
+
+        if unfinished_tasks:
+            task_details = "\n".join([f"Task ID: {task.taskId}, Title: {task.title}" for task in unfinished_tasks])
+            send_email(
+                subject="Unfinished Daily Tasks Alert",
+                body=f"The following daily tasks are not finished:\n{task_details}",
+                to="marius.gump@gmail.com"
+            )
+    finally:
+        db.close()
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Schedule the task
@@ -996,7 +1014,8 @@ def run_scheduler():
         time.sleep(60)
 
 def start_scheduler():
-    schedule.every(30).seconds.do(check_food_quantity)
+    schedule.every().day.at("09:00").do(check_food_quantity)
+    schedule.every().day.at("23:59").do(check_unfinished_daily_tasks)
     thread = threading.Thread(target=run_scheduler, daemon=True)
     thread.start()
 
