@@ -1,6 +1,3 @@
-#*TODO Maak de API
-#!TODO FIX
-#?TODO Vraag
 import threading
 import time
 import uuid
@@ -13,6 +10,12 @@ from sqlalchemy import DateTime, asc, desc
 
 import models
 import schemes
+import smtplib
+import os
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from sqlalchemy.orm import Session
+from database import SessionLocal
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from starlette.middleware.cors import CORSMiddleware
@@ -29,6 +32,45 @@ import io
 import random
 import requests
 
+def send_email(subject: str, body: str, to: str):
+    sender_email = "marius.gump@gmail.com"
+    sender_password = "itko dkgm pxvf oxuq "
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = to
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+        server.login(sender_email, sender_password)
+        text = msg.as_string()
+        server.sendmail(sender_email, to, text)
+        server.quit()
+        print("Email sent successfully")
+    except smtplib.SMTPException as e:
+        print(f"Failed to send email: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def check_food_quantity():
+    db: Session = SessionLocal()
+    try:
+        food_items = db.query(models.Stock).all()
+        for food in food_items:
+            if food.quantity < food.minimumQuantity:
+                send_email(
+                    subject="Low Food Quantity Alert",
+                    body=f"The quantity of food type ID {food.foodTypeId} is below the minimum threshold.",
+                    to="marius.gump@gmail.com"
+                )
+    finally:
+        db.close()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -954,6 +996,7 @@ def run_scheduler():
         time.sleep(60)
 
 def start_scheduler():
+    schedule.every(30).seconds.do(check_food_quantity)
     thread = threading.Thread(target=run_scheduler, daemon=True)
     thread.start()
 
@@ -968,5 +1011,6 @@ def schedule_repopulate_daily_tasks():
         db.close()
 
 if __name__ == "__main__":
+    start_scheduler()
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
