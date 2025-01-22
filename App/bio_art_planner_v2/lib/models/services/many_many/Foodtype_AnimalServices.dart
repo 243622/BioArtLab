@@ -8,12 +8,12 @@ import '../../classes/AnimalType.dart';
 import 'package:http/http.dart' as http;
 
 class FoodTypeAnimalServices {
-
+  static const String _baseApi = 'http://10.0.2.2:8000';
 
   // om foodtypes op te halen
   Future getFoodTypeAnimalTypeByAnimalTypeId(int animaTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/foodtypeanimal/$animaTypeId';
+      final url = '$_baseApi/foodtypeanimal/$animaTypeId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
       final json = jsonDecode(response.body) as List;
@@ -47,7 +47,7 @@ class FoodTypeAnimalServices {
   //Om animaltypes op te halen
   Future getAnimalTypesByFoodTypeId(int foodTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/animalfoodtype/$foodTypeId';
+      final url = '$_baseApi/animalfoodtype/$foodTypeId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
       final json = jsonDecode(response.body) as List;
@@ -80,7 +80,7 @@ class FoodTypeAnimalServices {
 
   Future makeFoodTypeAnimal(FoodtypeAnimal foodTypeAnimal) async {
     try {
-      const url = 'http://192.168.20.3:8000/foodtypeanimal/';
+      const url = '$_baseApi/foodtypeanimal/';
       final uri = Uri.parse(url);
       final body = {
         "foodTypeId": foodTypeAnimal.foodTypeId,
@@ -101,7 +101,7 @@ class FoodTypeAnimalServices {
 
   Future deleteFoodTypeAnimal(int foodTypeAnimalId) async {
     try {
-      final url = 'http://192.168.20.3:8000/foodtypeanimal/$foodTypeAnimalId';
+      final url = '$_baseApi/foodtypeanimal/$foodTypeAnimalId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -115,7 +115,7 @@ class FoodTypeAnimalServices {
 
   Future editFoodTypeAnimal(FoodtypeAnimal foodTypeAnimal, int foodTypeAnimalId) async {
     try {
-      final url = 'http://192.168.20.3:8000/foodtypeanimal/$foodTypeAnimalId';
+      final url = '$_baseApi/foodtypeanimal/$foodTypeAnimalId';
       final uri = Uri.parse(url);
       final body = {
         "foodTypeId": foodTypeAnimal.foodTypeId,

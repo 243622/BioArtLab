@@ -4,13 +4,15 @@ import '/models/classes/User.dart';
 import 'package:http/http.dart' as http;
 
 class UserServices {
+  static const String _baseApi = 'http://10.0.2.2:8000';
+  
   Future<List<User>> getAll([limit, offset]) async {
     try {
       final queryParams = {
         if (limit != null) 'limit': limit.toString(),
         if (offset != null) 'offset': offset.toString()
       };
-      const url = 'http://192.168.20.3:8000/users';
+      const url = '$_baseApi/users';
       final uri = Uri.parse(url).replace(queryParameters: queryParams);
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -35,7 +37,7 @@ class UserServices {
 
   Future getUserById(int userId) async {
     try {
-      final url = 'http://192.168.20.3:8000/userbyid/$userId';
+      final url = '$_baseApi/userbyid/$userId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
 
@@ -58,7 +60,7 @@ class UserServices {
 
   Future makeUser(User user) async {
     try {
-      const url = 'http://192.168.20.3:8000/user/';
+      const url = '$_baseApi/user/';
       final uri = Uri.parse(url);
       final body = {
         "username": user.username,
@@ -84,7 +86,7 @@ class UserServices {
 
   Future loginUser(String username, String password) async {
     try {
-      const url = 'http://192.168.20.3:8000/login';
+      const url = '$_baseApi/login';
       final uri = Uri.parse(url);
       final body = {"username": username, "password": password};
       final response = await http.post(uri,
@@ -101,7 +103,7 @@ class UserServices {
 
   Future refreshToken(String username) async {
     try {
-      final url = 'http://192.168.20.3:8000/refresh/$username}';
+      final url = '$_baseApi/refresh/$username}';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
 
@@ -115,7 +117,7 @@ class UserServices {
 
   Future deleteUser(int userId) async {
     try {
-      final url = 'http://192.168.20.3:8000/user/$userId';
+      final url = '$_baseApi/user/$userId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -129,7 +131,7 @@ class UserServices {
 
   Future editUser(User user, int userId) async {
     try {
-      final url = 'http://192.168.20.3:8000/user/$userId';
+      final url = '$_baseApi/user/$userId';
       final uri = Uri.parse(url);
       final body = {
         "username": user.username,

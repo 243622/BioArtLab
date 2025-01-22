@@ -1,6 +1,8 @@
-from sqlalchemy import Boolean, Column, Integer, String, DECIMAL, Text, Date, ForeignKey, SmallInteger, DateTime
+from sqlalchemy import Boolean, Column, Integer, String, DECIMAL, Text, Date, ForeignKey, SmallInteger, DateTime, TIMESTAMP
 from database import Base
 from sqlalchemy.orm import relationship, DeclarativeBase
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql import func
 from uuid import UUID
 
 
@@ -106,3 +108,17 @@ class UsersMessages(Base):
     userId = Column(Integer, ForeignKey('users.userId'))
     messageId = Column(Integer, ForeignKey('messages.messageId'))
 
+# Chat tables
+
+class ChatRoom(Base):
+    __tablename__ = 'chat_rooms'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False)
+
+class ChatMessage(Base):
+    __tablename__ = 'chat_messages'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    chat_room_id = Column(Integer, ForeignKey('chat_rooms.id'))
+    user_id = Column(Integer, ForeignKey('users.userId'))
+    message = Column(Text)
+    timestamp = Column(TIMESTAMP, server_default=func.current_timestamp())

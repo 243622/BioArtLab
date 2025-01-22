@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 class StockServices {
   final _foodTypeService = FoodTypeServices();
+  static const String _baseApi = 'http://10.0.2.2:8000';
 
   Future<List<Stock>> getAll([limit, offset]) async {
     try {
@@ -12,7 +13,7 @@ class StockServices {
         if (limit != null) 'limit': limit.toString(),
         if (offset != null) 'offset': offset.toString()
       };
-      const url = 'http://192.168.20.3:8000/stocks';
+      const url = '$_baseApi/stocks';
       final uri = Uri.parse(url).replace(queryParameters: queryParams);
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -39,7 +40,7 @@ class StockServices {
 
   Future getStockById(int stockId) async {
     try {
-      final url = 'http://192.168.20.3:8000/stock/$stockId';
+      final url = '$_baseApi/stock/$stockId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
       final json = jsonDecode(response.body);
@@ -61,7 +62,7 @@ class StockServices {
 
   Future makeStock(Stock stock) async {
     try {
-      const url = 'http://192.168.20.3:8000/stock/';
+      const url = '$_baseApi/stock/';
       final uri = Uri.parse(url);
       final body = {
         'quantity': stock.quantity,
@@ -84,7 +85,7 @@ class StockServices {
 
   Future deleteStock(int stockId) async {
     try {
-      final url = 'http://192.168.20.3:8000/stock/$stockId';
+      final url = '$_baseApi/stock/$stockId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -98,7 +99,7 @@ class StockServices {
 
   Future editStock(Stock stock, int stockId) async {
     try {
-      final url = 'http://192.168.20.3:8000/stock/$stockId';
+      final url = '$_baseApi/stock/$stockId';
       final uri = Uri.parse(url);
       final body = {
         'quantity': stock.quantity,

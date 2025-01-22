@@ -6,13 +6,15 @@ import 'package:http/http.dart' as http;
 
 class FoodTypeServices {
   FoodTypeAnimalServices foodTypeAnimalServices = FoodTypeAnimalServices();
+  static const String _baseApi = 'http://10.0.2.2:8000';
+
   Future<List<FoodType>> getAll([limit, offset]) async {
     try {
       final queryParams = {
         if (limit != null) 'limit': limit.toString(),
         if (offset != null) 'offset': offset.toString()
       };
-      const url = 'http://192.168.20.3:8000/foodtypes';
+      const url = '$_baseApi/foodtypes';
       final uri = Uri.parse(url).replace(queryParameters: queryParams);
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -23,7 +25,8 @@ class FoodTypeServices {
         for (int i = 0; i < foodTypes.length; i++) {
           print(foodTypes[i].toJson());
 
-          var animalTypesForFoodType = await foodTypeAnimalServices.getAnimalTypesByFoodTypeId(foodTypes[i].foodTypeId!);
+          var animalTypesForFoodType = await foodTypeAnimalServices
+              .getAnimalTypesByFoodTypeId(foodTypes[i].foodTypeId!);
           foodTypes[i].animalTypes = animalTypesForFoodType["animalTypes"];
         }
 
@@ -37,13 +40,14 @@ class FoodTypeServices {
 
   Future getFoodTypeById(int foodTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/foodtype/$foodTypeId';
+      final url = '$_baseApi/foodtype/$foodTypeId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
-        final foodType = FoodType(foodTypeId: json["foodTypeId"], name: json["name"]);
+        final foodType =
+            FoodType(foodTypeId: json["foodTypeId"], name: json["name"]);
         return foodType;
       }
     } catch (e) {
@@ -53,7 +57,7 @@ class FoodTypeServices {
 
   Future makeFoodType(FoodType foodType) async {
     try {
-      const url = 'http://192.168.20.3:8000/foodtype/';
+      const url = '$_baseApi/foodtype/';
       final uri = Uri.parse(url);
       final body = {'name': foodType.name};
       print(body);
@@ -72,7 +76,7 @@ class FoodTypeServices {
 
   Future deleteFoodType(int foodTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/foodtype/$foodTypeId';
+      final url = '$_baseApi/foodtype/$foodTypeId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -86,7 +90,7 @@ class FoodTypeServices {
 
   Future editFoodType(FoodType foodType, int foodTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/foodtype/$foodTypeId';
+      final url = '$_baseApi/foodtype/$foodTypeId';
       final uri = Uri.parse(url);
       final body = {"name": foodType.name};
       final response = await http.patch(uri, body: jsonEncode(body), headers: {

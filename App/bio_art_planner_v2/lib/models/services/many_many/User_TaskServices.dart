@@ -11,10 +11,12 @@ import 'package:translator/translator.dart';
 class UserTaskServices {
 
   final translator = GoogleTranslator();
+  static const String _baseApi = 'http://10.0.2.2:8000';
   // om tasks op te halen
+  
   Future getByUserId(int userId, [String language = "en", int limit = 0]) async {
     try {
-      final url = 'http://192.168.20.3:8000/usertasks/$userId?limit=$limit';
+      final url = '$_baseApi/usertasks/$userId?limit=$limit';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
       final json = jsonDecode(response.body) as List;
@@ -63,7 +65,7 @@ class UserTaskServices {
 
   Future getByUserIdForToday(int userId, [String language = "en", limit]) async {
     try {
-      final url = 'http://192.168.20.3:8000/usertasks/$userId/fortoday?limit=$limit';
+      final url = '$_baseApi/usertasks/$userId/fortoday?limit=$limit';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
       final json = jsonDecode(response.body) as List;
@@ -123,7 +125,7 @@ class UserTaskServices {
   //Om users op te halen
   Future getByTaskId(int taskId) async {
     try {
-      final url = 'http://192.168.20.3:8000/tasksusers/$taskId';
+      final url = '$_baseApi/tasksusers/$taskId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
       final json = jsonDecode(response.body) as List;
@@ -155,7 +157,7 @@ class UserTaskServices {
 
   Future makeUserTask(UserTask userTask) async {
     try {
-      const url = 'http://192.168.20.3:8000/usertasks/';
+      const url = '$_baseApi/usertasks/';
       final uri = Uri.parse(url);
       final body = {
           "userId": userTask.userId,
@@ -177,7 +179,7 @@ class UserTaskServices {
 
   Future deleteUserTask(int userTaskId) async {
     try {
-      final url = 'http://192.168.20.3:8000/usertasks/$userTaskId';
+      final url = '$_baseApi/usertasks/$userTaskId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -191,7 +193,7 @@ class UserTaskServices {
 
   Future editUserTask(UserTask userTask, int userTaskId) async {
     try {
-      final url = 'http://192.168.20.3:8000/usertasks/$userTaskId';
+      final url = '$_baseApi/usertasks/$userTaskId';
       final uri = Uri.parse(url);
       final body = {
         "userId": userTask.userId,

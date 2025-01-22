@@ -7,10 +7,12 @@ import 'package:bio_art_planner_v2/models/services/UserServices.dart';
 import '../../classes/User.dart';
 import 'package:http/http.dart' as http;
 class UserMessageServices{
+  static const String _baseApi = 'http://10.0.2.2:8000';
   // om messages op te halen
+  
   Future getUserMessagesByUserId(int userId) async {
     try {
-      final url = 'http://192.168.20.3:8000/usermessage/$userId';
+      final url = '$_baseApi/usermessage/$userId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
       final json = jsonDecode(response.body) as List;
@@ -43,7 +45,7 @@ class UserMessageServices{
   //Om users op te halen
   Future getMessageUsersByMessageId(int messageId) async {
     try {
-      final url = 'http://192.168.20.3:8000/messageuser/$messageId';
+      final url = '$_baseApi/messageuser/$messageId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
       final json = jsonDecode(response.body) as List;
@@ -75,7 +77,7 @@ class UserMessageServices{
 
   Future makeUserMessage(UserMessage userMessage) async {
     try {
-      const url = 'http://192.168.20.3:8000/usermessage/';
+      const url = '$_baseApi/usermessage/';
       final uri = Uri.parse(url);
       final body = {
         "userId": userMessage.userId,
@@ -96,7 +98,7 @@ class UserMessageServices{
 
   Future deleteUserMessage(int userMessageId) async {
     try {
-      final url = 'http://192.168.20.3:8000/usermessage/$userMessageId';
+      final url = '$_baseApi/usermessage/$userMessageId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -110,7 +112,7 @@ class UserMessageServices{
 
   Future editUserMessage(UserMessage userMessage, int userMessageId) async {
     try {
-      final url = 'http://192.168.20.3:8000/usermessage/$userMessageId';
+      final url = '$_baseApi/usermessage/$userMessageId';
       final uri = Uri.parse(url);
       final body = {
         "userId": userMessage.userId,

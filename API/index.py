@@ -1015,7 +1015,7 @@ def run_scheduler():
 
 def start_scheduler():
     schedule.every().day.at("09:00").do(check_food_quantity)
-    schedule.every().day.at("23:59").do(check_unfinished_daily_tasks)
+    schedule.every().day.at("22:00").do(check_unfinished_daily_tasks)
     thread = threading.Thread(target=run_scheduler, daemon=True)
     thread.start()
 
@@ -1028,6 +1028,27 @@ def schedule_repopulate_daily_tasks():
         repopulate_daily_user_tasks(db, old_to_new_task_ids)
     finally:
         db.close()
+
+# Chat endpoints
+
+class ChatMessage(BaseModel):
+    id: int = None
+    chat_room_id: int
+    user_id: int
+    message: str
+
+@app.post("/send-message", response_model=schemes.ChatMessage)
+def send_message(msg: schemes.ChatMessageCreate, db: Session = Depends(get_db)):
+    db_message = models.ChatMessage(**msg.dict())
+    db.add(db_message)
+    db.commit()
+    db.refresh(db_message)
+    return db_message
+
+@app.get("/get-messages/{chat_room_id}", response_model=List[schemes.ChatMessage])
+def get_messages(chat_room_id: int, db: Session = Depends(get_db)):
+    messages = db.query(models.ChatMessage).filter(models.ChatMessage.chat_room_id == chat_room_id).all()
+    return messages
 
 if __name__ == "__main__":
     start_scheduler()

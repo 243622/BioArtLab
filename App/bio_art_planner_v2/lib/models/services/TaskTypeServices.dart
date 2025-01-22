@@ -3,13 +3,15 @@ import '/models/classes/TaskType.dart';
 import "package:http/http.dart" as http;
 
 class TaskTypeServices {
+  static const String _baseApi = 'http://10.0.2.2:8000';
+  
   Future<List<TaskType>> getAll([limit, offset]) async {
     try {
       final queryParams = {
         if (limit != null) 'limit': limit.toString(),
         if (offset != null) 'offset': offset.toString()
       };
-      const url = 'http://192.168.20.3:8000/tasktypes';
+      const url = '$_baseApi/tasktypes';
       final uri = Uri.parse(url).replace(queryParameters: queryParams);
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -30,7 +32,7 @@ class TaskTypeServices {
 
   Future<TaskType?> getTaskTypeById(int taskTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/tasktype/$taskTypeId';
+      final url = '$_baseApi/tasktype/$taskTypeId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
 
@@ -50,7 +52,7 @@ class TaskTypeServices {
 
   Future makeTaskType(TaskType taskType) async {
     try {
-      const url = 'http://192.168.20.3:8000/tasktype/';
+      const url = '$_baseApi/tasktype/';
       final uri = Uri.parse(url);
       final body = {'name': taskType.name};
       print(body);
@@ -69,7 +71,7 @@ class TaskTypeServices {
 
   Future deleteTaskType(int taskTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/tasktype/$taskTypeId';
+      final url = '$_baseApi/tasktype/$taskTypeId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -83,7 +85,7 @@ class TaskTypeServices {
 
   Future editTaskType(TaskType taskType, int taskTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/tasktype/$taskTypeId';
+      final url = '$_baseApi/tasktype/$taskTypeId';
       final uri = Uri.parse(url);
       final body = {"name": taskType.name};
       final response = await http.patch(uri, body: jsonEncode(body), headers: {

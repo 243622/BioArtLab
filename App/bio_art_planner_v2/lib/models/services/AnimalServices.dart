@@ -6,6 +6,7 @@ import "package:intl/intl.dart";
 
 class AnimalServices {
   final _animalTypeServices = AnimalTypeServices();
+  static const String _baseApi = 'http://10.0.2.2:8000';
 
   Future<List<Animal>> getAll([limit, offset, animalType]) async {
     try {
@@ -14,7 +15,7 @@ class AnimalServices {
         if (offset != null) 'offset': offset.toString(),
         if (animalType != null) 'AnimalType': animalType.toString()
       };
-      const url = 'http://192.168.20.3:8000/animals';
+      const url = '$_baseApi/animal';
       final uri = Uri.parse(url).replace(queryParameters: queryParams);
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -48,7 +49,7 @@ class AnimalServices {
 
   Future getAnimalById(int animalId) async {
     try {
-      final url = 'http://192.168.20.3:8000/animal/$animalId';
+      final url = '$_baseApi/animal/$animalId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
 
@@ -62,7 +63,7 @@ class AnimalServices {
 
   Future makeAnimal(Animal animal) async {
     try {
-      const url = 'http://192.168.20.3:8000/animal/';
+      const url = '$_baseApi/animal/';
       final uri = Uri.parse(url);
       final body = {
         "name": animal.name,
@@ -86,7 +87,7 @@ class AnimalServices {
 
   Future deleteAnimal(int animalId) async {
     try {
-      final url = 'http://192.168.20.3:8000/animal/$animalId';
+      final url = '$_baseApi/animal/$animalId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -100,7 +101,7 @@ class AnimalServices {
 
   Future editAnimal(Animal animal, int animalId) async {
     try {
-      final url = 'http://192.168.20.3:8000/animal/$animalId';
+      final url = '$_baseApi/animal/$animalId';
       final uri = Uri.parse(url);
       final body = {
         "name": animal.name,

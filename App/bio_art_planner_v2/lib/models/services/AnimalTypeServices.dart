@@ -6,13 +6,15 @@ import 'package:http/http.dart' as http;
 
 class AnimalTypeServices {
   FoodTypeAnimalServices foodTypeAnimalServices = FoodTypeAnimalServices();
+  static const String _baseApi = 'http://10.0.2.2:8000';
+
   Future<List<AnimalType>> getAll([limit, offset]) async {
     try {
       final queryParams = {
         if (limit != null) 'limit': limit.toString(),
         if (offset != null) 'offset': offset.toString()
       };
-      const url = 'http://192.168.20.3:8000/animaltypes';
+      const url = '$_baseApi/animaltypes';
       final uri = Uri.parse(url).replace(queryParameters: queryParams);
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -34,7 +36,7 @@ class AnimalTypeServices {
 
   Future getAnimalTypeById(int animalTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/animaltype/$animalTypeId';
+      final url = '$_baseApi/animaltype/$animalTypeId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
 
@@ -50,7 +52,7 @@ class AnimalTypeServices {
 
   Future makeAnimalType(AnimalType animalType) async {
     try {
-      const url = 'http://192.168.20.3:8000/animaltype/';
+      const url = '$_baseApi/animaltype/';
       final uri = Uri.parse(url);
       final body = {'name': animalType.name};
       final response = await http.post(uri, body: jsonEncode(body), headers: {
@@ -68,7 +70,7 @@ class AnimalTypeServices {
 
   Future deleteAnimalType(int animalTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/animaltype/$animalTypeId';
+      final url = '$_baseApi/animaltype/$animalTypeId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -82,7 +84,7 @@ class AnimalTypeServices {
 
   Future editAnimalType(AnimalType animalType, int animalTypeId) async {
     try {
-      final url = 'http://192.168.20.3:8000/animaltype/$animalTypeId';
+      final url = '$_baseApi/animaltype/$animalTypeId';
       final uri = Uri.parse(url);
       final body = {"name": animalType.name};
       final response = await http.patch(uri, body: jsonEncode(body), headers: {

@@ -74,7 +74,20 @@ class UsersMessagesBase(BaseModel):
     userId: Union[int, None] = None
     messageId: Union[int, None] = None
 
+#chat
 
+class ChatMessageBase(BaseModel):
+    chat_room_id: int
+    user_id: int
+    message: str
 
+class ChatMessageCreate(ChatMessageBase):
+    pass
+
+class ChatMessage(ChatMessageBase):
+    id: int
+
+    class Config:
+        from_attributes = True
 
 

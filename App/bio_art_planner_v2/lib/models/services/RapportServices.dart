@@ -5,13 +5,15 @@ import '/models/classes/Rapport.dart';
 import 'package:http/http.dart' as http;
 
 class RapportServices {
+  static const String _baseApi = 'http://10.0.2.2:8000';
+  
   Future<List<Rapport>> getAll([limit, offset]) async {
     try {
       final queryParams = {
         if (limit != null) 'limit': limit.toString(),
         if (offset != null) 'offset': offset.toString()
       };
-      const url = 'http://192.168.20.3:8000/rapports';
+      const url = '$_baseApi/rapports';
       final uri = Uri.parse(url).replace(queryParameters: queryParams);
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -40,7 +42,7 @@ class RapportServices {
 
   Future getRapportById(int rapportId) async {
     try {
-      final url = 'http://192.168.20.3:8000/rapport/$rapportId';
+      final url = '$_baseApi/rapport/$rapportId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
 
@@ -63,7 +65,7 @@ class RapportServices {
 
   Future getRapportByDate(DateTime date) async {
     try {
-      final url = 'http://192.168.20.3:8000/rapports/${DateFormat("yyyy-MM-dd").format(date)}';
+      final url = '$_baseApi/rapports/${DateFormat("yyyy-MM-dd").format(date)}';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
 
@@ -94,7 +96,7 @@ class RapportServices {
 
   Future makeRapport(Rapport rapport) async {
     try {
-      const url = 'http://192.168.20.3:8000/rapport/';
+      const url = '$_baseApi/rapport/';
       final uri = Uri.parse(url);
 
       final body = {
@@ -117,7 +119,7 @@ class RapportServices {
 
   Future deleteRapport(int rapportId) async {
     try {
-      final url = 'http://192.168.20.3:8000/rapport/$rapportId';
+      final url = '$_baseApi/rapport/$rapportId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -131,7 +133,7 @@ class RapportServices {
 
   Future editRapport(Rapport rapport, int rapportId) async {
     try {
-      final url = 'http://192.168.20.3:8000/rapport/$rapportId';
+      final url = '$_baseApi/rapport/$rapportId';
       final uri = Uri.parse(url);
       final body = {
         "title": rapport.title,

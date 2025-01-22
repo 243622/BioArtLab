@@ -3,13 +3,15 @@ import '/models/classes/Message.dart';
 import 'package:http/http.dart' as http;
 
 class MessageServices {
+  static const String _baseApi = 'http://10.0.2.2:8000';
+  
   Future<List<Message>> getAll([limit, offset, animalType]) async {
     try {
       final queryParams = {
         if (limit != null) 'limit': limit.toString(),
         if (offset != null) 'offset': offset.toString()
       };
-      const url = 'http://192.168.20.3:8000/messages';
+      const url = '$_baseApi/messages';
       final uri = Uri.parse(url).replace(queryParameters: queryParams);
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -34,7 +36,7 @@ class MessageServices {
 
   Future getMessageById(int messageId) async {
     try {
-      final url = 'http://192.168.20.3:8000/message/$messageId';
+      final url = '$_baseApi/message/$messageId';
       final uri = Uri.parse(url);
       final response = await http.get(uri);
 
@@ -56,7 +58,7 @@ class MessageServices {
 
   Future makeMessage(Message message) async {
     try {
-      const url = 'http://192.168.20.3:8000/message/';
+      const url = '$_baseApi/message/';
       final uri = Uri.parse(url);
       final body = {
         "title": message.title,
@@ -78,7 +80,7 @@ class MessageServices {
 
   Future deleteMessage(int messageId) async {
     try {
-      final url = 'http://192.168.20.3:8000/message/$messageId';
+      final url = '$_baseApi/message/$messageId';
       final uri = Uri.parse(url);
       final response = await http.delete(uri);
 
@@ -92,7 +94,7 @@ class MessageServices {
 
   Future editMessage(Message message, int messageId) async {
     try {
-      final url = 'http://192.168.20.3:8000/message/$messageId';
+      final url = '$_baseApi/message/$messageId';
       final uri = Uri.parse(url);
       final body = {
         "title": message.title,

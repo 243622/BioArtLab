@@ -43,7 +43,9 @@ class GlobalProvider extends ChangeNotifier {
 
   //To delete before release
   final localHostUrl = "http://127.0.0.1:8000";
+  final localHostUrlEmulator = "http://10.0.2.2:8000";
   final releaseHostUrl = "http://192.168.20.3:8000";
+  static const String _baseApi = 'http://10.0.2.2:8000';
 
 
   late Map _currentUser = {};
@@ -244,7 +246,7 @@ class GlobalProvider extends ChangeNotifier {
   Future<bool> loginUser(User user) async {
     isLoading = true;
     notifyListeners();
-    final url = 'http://192.168.20.3:8000/user/${user.username}';
+    final url = '$_baseApi/user/${user.username}';
     final uri = Uri.parse(url);
     final responseCheck = await http.get(uri);
     if(responseCheck.statusCode == 401){
