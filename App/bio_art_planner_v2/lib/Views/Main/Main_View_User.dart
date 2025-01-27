@@ -1,4 +1,6 @@
+// lib/Views/Main/Main_View_User.dart
 import 'package:bio_art_planner_v2/Views/User/UserRapport_Screen.dart';
+import 'package:bio_art_planner_v2/pages/chats/ChatRoomsPage.dart';
 
 import '../../Components/User/DrawerUser.dart';
 import '../Settings_View.dart';
@@ -77,6 +79,7 @@ class _MainViewUserState extends State<MainViewUser> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = context.read<GlobalProvider>().currentUser["userId"];
     return Scaffold(
       drawer: DrawerUserComp(),
       appBar: AppBar(
@@ -116,8 +119,9 @@ class _MainViewUserState extends State<MainViewUser> {
               selectedIndex = index;
             });
           },
-          children: const [
+          children: [
             DashBoardUser(),
+            ChatRoomsPage(userId: userId),
           ]),
       floatingActionButton: FloatingActionButton.extended(onPressed: (){
         Navigator.push(

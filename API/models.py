@@ -18,6 +18,7 @@ class User(Base):
     username = Column(String(100))
     password = Column(String(100))
     function = Column(SmallInteger)
+    chat_rooms = relationship('ChatRoom', secondary='user_chat_rooms', back_populates='users')
 
 class Task(Base):
     __tablename__ = 'tasks'
@@ -114,6 +115,13 @@ class ChatRoom(Base):
     __tablename__ = 'chat_rooms'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
+    users = relationship('User', secondary='user_chat_rooms', back_populates='chat_rooms')
+
+class UserChatRoom(Base):
+    __tablename__ = 'user_chat_rooms'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.userId'))
+    chat_room_id = Column(Integer, ForeignKey('chat_rooms.id'))
 
 class ChatMessage(Base):
     __tablename__ = 'chat_messages'

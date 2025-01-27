@@ -1037,6 +1037,21 @@ class ChatMessage(BaseModel):
     user_id: int
     message: str
 
+@app.post("/user-chat-room", response_model=schemes.UserChatRoom)
+def create_user_chat_room(user_chat_room: schemes.UserChatRoomCreate, db: Session = Depends(get_db)):
+    db_user_chat_room = models.UserChatRoom(**user_chat_room.dict())
+    db.add(db_user_chat_room)
+    db.commit()
+    db.refresh(db_user_chat_room)
+    return db_user_chat_room
+
+@app.get("/chatrooms/{user_id}", response_model=List[schemes.ChatRoom])
+def get_user_chat_rooms(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.userId == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user.chat_rooms
+
 @app.post("/send-message", response_model=schemes.ChatMessage)
 def send_message(msg: schemes.ChatMessageCreate, db: Session = Depends(get_db)):
     db_message = models.ChatMessage(**msg.dict())
@@ -1048,6 +1063,8 @@ def send_message(msg: schemes.ChatMessageCreate, db: Session = Depends(get_db)):
 @app.get("/get-messages/{chat_room_id}", response_model=List[schemes.ChatMessage])
 def get_messages(chat_room_id: int, db: Session = Depends(get_db)):
     messages = db.query(models.ChatMessage).filter(models.ChatMessage.chat_room_id == chat_room_id).all()
+    if not messages:
+        raise HTTPException(status_code=404, detail="No messages found for this chat room")
     return messages
 
 if __name__ == "__main__":

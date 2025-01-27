@@ -91,3 +91,30 @@ class ChatMessage(ChatMessageBase):
         from_attributes = True
 
 
+
+class UserChatRoomBase(BaseModel):
+    user_id: int
+    chat_room_id: int
+
+class UserChatRoomCreate(UserChatRoomBase):
+    pass
+
+class UserChatRoom(UserChatRoomBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+
+class ChatRoomBase(BaseModel):
+    name: Union[str, None] = None
+
+class ChatRoomCreate(ChatRoomBase):
+    pass
+
+class ChatRoom(ChatRoomBase):
+    id: int
+
+    class Config:
+        from_attributes = True
